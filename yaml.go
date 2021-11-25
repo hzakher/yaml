@@ -16,9 +16,18 @@ import (
 )
 
 var (
-	// Most struct in the wild use json so we use it too.
-	YAML_TAG = "json"
+	// default tag value.	
+	yaml_tag = "yaml"
 )
+
+// NewDecoder returns a new decoder that reads from r.
+//
+// The decoder introduces its own buffering and may read
+// data from r beyond the YAML values requested.
+func SetTag(tag string) {
+	yaml_tag = tag
+}
+
 
 // MapSlice encodes and decodes as a YAML map.
 // The order of keys is preserved when encoding and decoding.
@@ -332,7 +341,7 @@ func getStructInfo(st reflect.Type) (*structInfo, error) {
 
 		info := fieldInfo{Num: i}
 
-		tag := field.Tag.Get(YAML_TAG)
+		tag := field.Tag.Get(yaml_tag)
 		if tag == "" && strings.Index(string(field.Tag), ":") < 0 {
 			tag = string(field.Tag)
 		}
